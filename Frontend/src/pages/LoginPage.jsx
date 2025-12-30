@@ -22,9 +22,6 @@ export function LoginPage() {
       localStorage.setItem('refresh_token', data.refresh);
       setToken(data.access);
       
-      // Decode user from token (simple approach)
-      setUser({ username: formData.username });
-      
       navigate('/dashboard');
     } catch (err) {
       setError(err.response?.data?.detail || 'Invalid credentials');

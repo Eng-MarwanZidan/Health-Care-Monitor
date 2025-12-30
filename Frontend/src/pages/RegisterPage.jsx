@@ -38,9 +38,6 @@ export function RegisterPage() {
       localStorage.setItem('refresh_token', data.refresh);
       setToken(data.access);
 
-      // Decode user from token (simple approach)
-      setUser({ username: formData.username });
-
       navigate('/dashboard');
     } catch (err) {
       // Handle different types of validation errors
