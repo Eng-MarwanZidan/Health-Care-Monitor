@@ -40,7 +40,8 @@ class MeasurementListCreateView(generics.ListCreateAPIView):
         measurement = serializer.save(patient=patient)
 
         try:
-            ai = HealthAI()
+            from core.ai_model import get_health_ai
+            ai = get_health_ai()
             result = ai.predict({
                 'heart_rate': measurement.heart_rate,
                 'spo2': measurement.spo2,
@@ -67,21 +68,23 @@ class MeasurementListCreateView(generics.ListCreateAPIView):
         except Exception as e:
             logger.exception(f"AI failure for measurement {measurement.id}: {e}")
 
-
-    # override create to ensure response includes nested prediction
     def create(self, request, *args, **kwargs):
-        response = super().create(request, *args, **kwargs)
-        # re-serialize the created object including prediction
         try:
-            # find created instance id from response
-            created_id = response.data.get('id')
-            if created_id:
-                instance = Measurement.objects.select_related('prediction').get(id=created_id, patient__user=request.user)
-                data = MeasurementSerializer(instance, context={'request': request}).data
-                return Response(data, status=status.HTTP_201_CREATED)
-        except Exception:
-            pass
-        return response
+            response = super().create(request, *args, **kwargs)
+            # re-serialize the created object including prediction
+            try:
+                # find created instance id from response
+                created_id = response.data.get('id')
+                if created_id:
+                    instance = Measurement.objects.select_related('prediction').get(id=created_id, patient__user=request.user)
+                    data = MeasurementSerializer(instance, context={'request': request}).data
+                    return Response(data, status=status.HTTP_201_CREATED)
+            except Exception:
+                pass
+            return response
+        except Exception as e:
+            logger.error(f"Measurement creation error: {str(e)}", exc_info=True)
+            raise
 
 class MeasurementDetailView(generics.RetrieveDestroyAPIView):
     serializer_class = MeasurementSerializer

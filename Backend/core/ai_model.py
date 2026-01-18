@@ -1,8 +1,11 @@
 # health_ai.py
 import os
 import numpy as np
+import pandas as pd
 from django.conf import settings
 import logging
+import threading
+import warnings
 
 MODEL_PATH = os.path.join(
     getattr(settings, "BASE_DIR", os.path.dirname(os.path.abspath(__file__))),
@@ -16,6 +19,25 @@ try:
     HAS_JOBLIB = True
 except Exception:
     HAS_JOBLIB = False
+
+# Global singleton instance with thread-safe locking
+_health_ai_instance = None
+_health_ai_lock = threading.Lock()
+
+def get_health_ai():
+    """
+    Singleton pattern: Returns the same HealthAI instance for all predictions.
+    This avoids reloading the model.pkl file for every prediction (major latency issue).
+    Loads model.pkl only ONCE on first use, then caches it in memory.
+    Thread-safe with double-check locking pattern.
+    """
+    global _health_ai_instance
+    if _health_ai_instance is None:
+        with _health_ai_lock:
+            if _health_ai_instance is None:
+                _health_ai_instance = HealthAI()
+                logger.info("HealthAI singleton instance created and model cached in memory")
+    return _health_ai_instance
 
 class HealthAI:
     """
@@ -111,20 +133,24 @@ class HealthAI:
     def _model_predict(self, X):
         """
         Attempts to obtain a score in [0,1] from the loaded model.
-        Accepts X as 2D numpy array.
+        Accepts X as DataFrame with feature names or 2D numpy array.
         Model is now a Pipeline with StandardScaler + GradientBoostingRegressor.
         """
         if self.model is None:
             return None
 
         try:
-            # Pipeline handles scaling internally, predict returns continuous score
-            if hasattr(self.model, "predict"):
-                pred = self.model.predict(X)
-                # Get first prediction and clamp to [0,1]
-                score = float(pred[0]) if len(pred) > 0 else 0.0
-                score = max(0.0, min(1.0, score))
-                return float(score)
+            # Suppress the feature names warning for sklearn models trained with feature names
+            # but used with arrays/dataframes without matching names
+            with warnings.catch_warnings():
+                warnings.filterwarnings("ignore", message=".*does not have valid feature names.*")
+                # Pipeline handles scaling internally, predict returns continuous score
+                if hasattr(self.model, "predict"):
+                    pred = self.model.predict(X)
+                    # Get first prediction and clamp to [0,1]
+                    score = float(pred[0]) if len(pred) > 0 else 0.0
+                    score = max(0.0, min(1.0, score))
+                    return float(score)
         except Exception as e:
             logger.exception("Model prediction failed: %s", e)
             return None
@@ -234,7 +260,9 @@ class HealthAI:
 
         # 3) Try model prediction (safe)
         keys = ['heart_rate','spo2','systolic','diastolic','respiratory_rate','temperature']
-        X = np.array([[float(features.get(k, 0)) for k in keys]])
+        # Create DataFrame with feature names instead of plain numpy array
+        # This prevents sklearn warning about missing feature names
+        X = pd.DataFrame([[float(features.get(k, 0)) for k in keys]], columns=keys)
         score = None
         try:
             score = self._model_predict(X)

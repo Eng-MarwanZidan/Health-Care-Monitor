@@ -14,8 +14,8 @@ class MeasurementSerializer(serializers.ModelSerializer):
     # Add validation to vital signs
     heart_rate = serializers.FloatField(min_value=30, max_value=200)
     spo2 = serializers.FloatField(min_value=50, max_value=100)
-    systolic = serializers.IntegerField(min_value=40, max_value=300)
-    diastolic = serializers.IntegerField(min_value=30, max_value=200)
+    systolic = serializers.FloatField(min_value=40, max_value=300)
+    diastolic = serializers.FloatField(min_value=30, max_value=200)
     respiratory_rate = serializers.FloatField(min_value=5, max_value=60, required=False, allow_null=True)
     temperature = serializers.FloatField(min_value=35, max_value=42, required=False, allow_null=True)
 

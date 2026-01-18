@@ -3,14 +3,20 @@ from pathlib import Path
 from datetime import timedelta # for JWT token lifetime settings
 from dotenv import load_dotenv
 
-env_path = Path(__file__).resolve().parent.parent.parent / '.env' # Load .env file path from the project root
-load_dotenv(dotenv_path=env_path)
-
 BASE_DIR = Path(__file__).resolve().parent.parent.parent #define base directory
+
+env_path = Path(__file__).resolve().parent.parent.parent / '.env' # Load .env file path from the project root
+
+if os.getenv("DJANGO_ENV") != "docker":
+    load_dotenv(dotenv_path=env_path)
 
 SECRET_KEY = os.getenv('SECRET_KEY', 'replace-me') # gotenv(value in .env file, default value if not found)
 DEBUG = os.getenv('DEBUG', 'True') == 'True' 
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost').split(',')
+ALLOWED_HOSTS = os.getenv(
+    "ALLOWED_HOSTS",
+    "backend,localhost,127.0.0.1"
+).split(",")
+
 
 # Application definition: https://docs.djangoproject.com/en/3.2/ref/settings/#installed-apps
 INSTALLED_APPS = [
@@ -41,6 +47,9 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
 ]
 
+# CORS settings: https://pypi.org/project/django-cors-headers/
+CORS_ALLOWED_ORIGINS = os.getenv('CORS_ALLOWED_ORIGINS', 'http://localhost:3000,http://localhost:5173,http://127.0.0.1:3000,http://127.0.0.1:5173').split(',')
+
 ROOT_URLCONF = 'backend.urls' # root URL configuration module
 
 # Template settings: https://docs.djangoproject.com/en/3.2/topics/templates/
@@ -65,14 +74,15 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 ASGI_APPLICATION = 'backend.asgi.application'
 
 # Database configuration: using mysql for simplicity
+# Note: Can be overridden in prod.py for production-specific options
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': os.getenv('DB_NAME'),
-        'USER': os.getenv('DB_USER'),
+        'NAME': os.getenv('DB_NAME') or 'health_monitor',
+        'USER': os.getenv('DB_USER') or 'root',
         'PASSWORD': os.getenv('DB_PASSWORD'),
         'HOST': os.getenv('DB_HOST'),
-        'PORT': os.getenv('DB_PORT')
+        'PORT': os.getenv('DB_PORT', '3306'),
     }
 }
 
@@ -127,6 +137,7 @@ REST_FRAMEWORK = {
         # Use IsAuthenticated permission for all API endpoints by default
         'rest_framework.permissions.IsAuthenticated',
     ),
+    'EXCEPTION_HANDLER': 'apps.healthmonitor.exception_handler.custom_exception_handler',
 }
 
 # JWT settings: https://dj-rest-auth.readthedocs.io/en/latest/settings.html
@@ -136,18 +147,24 @@ SIMPLE_JWT = {
     'AUTH_HEADER_TYPES': ('Bearer',),
 }
 
-# CORS settings: https://pypi.org/project/django-cors-headers/
-CORS_ALLOWED_ORIGINS = os.getenv('CORS_ALLOWED_ORIGINS', 'http://localhost:3000,http://localhost:5173,http://127.0.0.1:3000,http://127.0.0.1:5173').split(',')
-
-CORS_ALLOW_CREDENTIALS = True
-
-
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
     'handlers': {
         'console': {
             'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'rest_framework': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+        'apps.healthmonitor': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate': False,
         },
     },
     'root': {
