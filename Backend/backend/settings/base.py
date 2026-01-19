@@ -137,7 +137,7 @@ REST_FRAMEWORK = {
         # Use IsAuthenticated permission for all API endpoints by default
         'rest_framework.permissions.IsAuthenticated',
     ),
-    'EXCEPTION_HANDLER': 'apps.healthmonitor.exception_handler.custom_exception_handler',
+    'EXCEPTION_HANDLER': 'Backend.utils.exception_handler.custom_exception_handler',
 }
 
 # JWT settings: https://dj-rest-auth.readthedocs.io/en/latest/settings.html
