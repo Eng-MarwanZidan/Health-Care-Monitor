@@ -2,6 +2,7 @@ import { create } from 'zustand';
 
 export const useAuthStore = create((set) => ({
   token: localStorage.getItem('access_token') || null,
+  refreshToken: localStorage.getItem('refresh_token') || null,
   user: null,
   isLoading: false,
   error: null,
@@ -15,13 +16,22 @@ export const useAuthStore = create((set) => ({
     set({ token });
   },
 
+  setRefreshToken: (refreshToken) => {
+    if (refreshToken) {
+      localStorage.setItem('refresh_token', refreshToken);
+    } else {
+      localStorage.removeItem('refresh_token');
+    }
+    set({ refreshToken });
+  },
+
   setUser: (user) => set({ user }),
   setLoading: (isLoading) => set({ isLoading }),
   setError: (error) => set({ error }),
   logout: () => {
     localStorage.removeItem('access_token');
     localStorage.removeItem('refresh_token');
-    set({ token: null, user: null });
+    set({ token: null, refreshToken: null, user: null });
   },
 }));
 

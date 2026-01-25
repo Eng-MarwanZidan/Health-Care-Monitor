@@ -62,20 +62,20 @@ export function Layout({ children }) {
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
       {/* Header */}
-      <header className="bg-white border-b border-gray-200 shadow-sm">
+      <header className="bg-white border-b border-gray-200 shadow-sm p-4">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             {/* Logo */}
             <div className="flex items-center">
-              <div className="text-2xl mr-3">❤️</div>
+              <div className="text-4xl mr-3">❤️</div>
               <div>
-                <h1 className="text-xl font-bold text-medical-600">Health Monitor</h1>
-                <p className="text-xs text-gray-500">Medical Dashboard</p>
+                <h1 className="text-3xl font-bold text-medical-600">Health Monitor</h1>
+                <p className="text-2xs text-balck-700">Medical Dashboard</p>
               </div>
             </div>
 
             {/* Navigation */}
-            <nav className="hidden md:flex space-x-8">
+            <nav className="hidden md:flex space-x-6">
               <NavLink to="/dashboard" label="Dashboard" />
               <NavLink to="/patients" label="Patients" />
               <NavLink to="/measurements" label="Measurements" />
@@ -132,7 +132,7 @@ export function Layout({ children }) {
                   </div>
                   <button
                     onClick={handleLogout}
-                    className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center transition-colors"
+                    className="w-full text-left px-4 py-2 text-sm text-white font-semibold bg-red-600 rounded-lg hover:bg-red-700 flex items-center transition-colors"
                   >
                     <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
@@ -177,11 +177,10 @@ export function Layout({ children }) {
         <div className="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="flex items-center mb-4 md:mb-0">
-              <div className="text-lg mr-2">❤️</div>
-              <span className="text-sm text-gray-600">Health Monitor - Medical Dashboard</span>
+              <span className="text-2sm text-gray-900">Health Monitor - Medical Dashboard</span>
             </div>
-            <div className="flex space-x-6 text-sm text-gray-500">
-              <span>© 2025 Health Monitor</span>
+            <div className="flex space-x-6 text-sm text-gray-900">
+              <span>© 2026 Health Monitor</span>
               <span>•</span>
               <span>Version 1.0.0</span>
               <span>•</span>

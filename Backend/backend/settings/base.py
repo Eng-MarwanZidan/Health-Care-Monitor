@@ -17,7 +17,6 @@ ALLOWED_HOSTS = os.getenv(
     "backend,localhost,127.0.0.1"
 ).split(",")
 
-
 # Application definition: https://docs.djangoproject.com/en/3.2/ref/settings/#installed-apps
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -142,8 +141,10 @@ REST_FRAMEWORK = {
 
 # JWT settings: https://dj-rest-auth.readthedocs.io/en/latest/settings.html
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=1),  # Extended from 60 minutes for better development/testing experience
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=30),  # Extended from 7 days
+    'ROTATE_REFRESH_TOKENS': True,  # Issue a new refresh token when using the refresh endpoint
+    'BLACKLIST_AFTER_ROTATION': False,
     'AUTH_HEADER_TYPES': ('Bearer',),
 }
 

@@ -50,7 +50,7 @@ export function DashboardPage() {
           title="Total Patients"
           value={patients.length}
           icon="👥"
-          color="medical"
+          color="success"
         />
         <StatCard
           title="Recent Measurements"
@@ -129,8 +129,9 @@ export function DashboardPage() {
 
 function StatCard({ title, value, icon, color }) {
   const colorClasses = {
+    success:'bg-success-50 text-green-600 border-green-200',
     medical: 'bg-medical-50 text-medical-600 border-medical-200',
-    danger: 'bg-danger-50 text-danger-600 border-danger-200',
+    danger: 'bg-danger-50 text-danger-600 border-red-200',
   };
   return (
     <Card className={`text-center border-l-4 ${colorClasses[color]}`}>

@@ -1,0 +1,25 @@
+# Frontend .dockerignore - keep frontend image small and reproducible
+
+# Node
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Build outputs
+dist/
+build/
+
+# Env files
+.env
+.env.*
+
+# Git
+.git
+.gitignore
+
+# Editor/IDE
+.vscode/
+.idea/
+
+# Dockerfile (avoid copying build-time Dockerfile into final context)
+Dockerfile

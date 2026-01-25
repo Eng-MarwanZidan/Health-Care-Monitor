@@ -4,8 +4,8 @@ from .models import Patient, Measurement, Prediction
 class PredictionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Prediction
-        fields = ('id','risk_score','risk_label','created_at','measurement')
-        read_only_fields = ('id','risk_score','risk_label','created_at','measurement')
+        fields = ('id','risk_score','risk_label','reason','created_at','measurement')
+        read_only_fields = ('id','risk_score','risk_label','reason','created_at','measurement')
 
 class MeasurementSerializer(serializers.ModelSerializer):
     # include nested prediction if exists

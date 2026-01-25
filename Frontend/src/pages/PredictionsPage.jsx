@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { measurementAPI, patientAPI } from '../api';
 import { Layout } from '../components/Layout';
-import { Card, CardHeader, Badge, Button, Alert, Loading } from '../components/UI';
+import { Card, Badge, Button, Alert, Loading } from '../components/UI';
 
 export function PredictionsPage() {
   const [measurements, setMeasurements] = useState([]);
@@ -177,22 +177,22 @@ export function PredictionsPage() {
                   </div>
 
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
-                    <div className="bg-gray-50 rounded-lg p-3">
+                    <div className="bg-gray-50 rounded-lg p-3 border border-gray-300">
                       <p className="text-xs text-gray-600 font-semibold">Risk Score</p>
                       <p className="text-2xl font-bold text-gray-900 mt-1">
                         {(measurement.prediction.risk_score * 100).toFixed(1)}%
                       </p>
                     </div>
-                    <div className="bg-gray-50 rounded-lg p-3">
+                    <div className="bg-gray-50 rounded-lg p-3 border border-gray-300">
                       <p className="text-xs text-gray-600 font-semibold">Heart Rate</p>
                       <p className="text-lg font-bold text-gray-900 mt-1">{measurement.heart_rate}</p>
                       <p className="text-xs text-gray-500">bpm</p>
                     </div>
-                    <div className="bg-gray-50 rounded-lg p-3">
+                    <div className="bg-gray-50 rounded-lg p-3 border border-gray-300">
                       <p className="text-xs text-gray-600 font-semibold">SpO₂</p>
                       <p className="text-lg font-bold text-gray-900 mt-1">{measurement.spo2}%</p>
                     </div>
-                    <div className="bg-gray-50 rounded-lg p-3">
+                    <div className="bg-gray-50 rounded-lg p-3 border border-gray-300">
                       <p className="text-xs text-gray-600 font-semibold">Blood Pressure</p>
                       <p className="text-lg font-bold text-gray-900 mt-1">
                         {measurement.systolic}/{measurement.diastolic}
@@ -201,9 +201,17 @@ export function PredictionsPage() {
                     </div>
                   </div>
 
+                  {measurement.prediction.reason && (
+                    <div className="p-3 bg-blue-50 rounded-lg border border-blue-200 mb-4">
+                      <p className="text-sm font-semibold text-gray-900">Reason</p>
+                      <p className="text-sm text-gray-800">{measurement.prediction.reason}</p>
+                    </div>
+                  )}
+
                   {measurement.notes && (
                     <div className="p-3 bg-blue-50 rounded-lg border border-blue-200">
-                      <p className="text-sm text-gray-700"><strong>Notes:</strong> {measurement.notes}</p>
+                      <p className="text-sm font-semibold text-gray-900">Notes</p>
+                      <p className="text-sm text-gray-800">{measurement.notes}</p>
                     </div>
                   )}
                 </div>
@@ -229,7 +237,7 @@ export function PredictionsPage() {
 function StatCard({ title, value, icon, color }) {
   const colorClasses = {
     medical: 'bg-medical-50 text-medical-600 border-medical-200',
-    danger: 'bg-danger-50 text-danger-600 border-danger-200',
+    danger: 'bg-danger-50 text-danger-600 border-red-200',
     warning: 'bg-warning-50 text-warning-600 border-warning-200',
     success: 'bg-success-50 text-success-600 border-success-200',
   };

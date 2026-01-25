@@ -3,7 +3,6 @@ from rest_framework.response import Response
 from .models import Patient, Measurement, Prediction
 from .serializers import PatientSerializer, MeasurementSerializer, PredictionSerializer
 from django.shortcuts import get_object_or_404
-from core.ai_model import HealthAI
 from django.http import Http404
 import logging
 
@@ -55,14 +54,17 @@ class MeasurementListCreateView(generics.ListCreateAPIView):
                 logger.error(f"AI Error for measurement {measurement.id}: {result.get('detail')}")
                 score = 0.0
                 label = "invalid"
+                reason = "Invalid input"
             else:
                 score = float(result['risk_score'])
                 label = result['risk_label']
+                reason = result['reason']
 
             Prediction.objects.create(
                 measurement=measurement,
                 risk_score=score,
-                risk_label=label
+                risk_label=label,
+                reason=reason 
             )
 
         except Exception as e:

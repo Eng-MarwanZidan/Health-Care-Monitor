@@ -21,7 +21,8 @@ export function MeasurementsPage() {
     diastolic: '',
     respiratory_rate: '',
     temperature: '',
-    notes: '',
+    reason: '',
+    notes: ''
   });
 
   useEffect(() => {
@@ -75,6 +76,7 @@ export function MeasurementsPage() {
         diastolic: parseFloat(formData.diastolic),
         respiratory_rate: formData.respiratory_rate ? parseFloat(formData.respiratory_rate) : null,
         temperature: formData.temperature ? parseFloat(formData.temperature) : null,
+        notes: formData.notes
       });
       setMeasurements([data, ...measurements]);
       setFormData({
@@ -304,32 +306,32 @@ export function MeasurementsPage() {
                   </p>
 
                   <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-                    <div className="bg-gray-50 rounded-lg p-3 text-center">
+                    <div className="bg-gray-50 rounded-lg p-3 text-center border border-gray-300">
                       <p className="text-xs text-gray-600 font-semibold">Heart Rate</p>
                       <p className="text-lg font-bold text-gray-900 mt-1">{measurement.heart_rate}</p>
                       <p className="text-xs text-gray-500">bpm</p>
                     </div>
-                    <div className="bg-gray-50 rounded-lg p-3 text-center">
+                    <div className="bg-gray-50 rounded-lg p-3 text-center border border-gray-300">
                       <p className="text-xs text-gray-600 font-semibold">SpO₂</p>
                       <p className="text-lg font-bold text-gray-900 mt-1">{measurement.spo2}</p>
                       <p className="text-xs text-gray-500">%</p>
                     </div>
-                    <div className="bg-gray-50 rounded-lg p-3 text-center">
+                    <div className="bg-gray-50 rounded-lg p-3 text-center border border-gray-300">
                       <p className="text-xs text-gray-600 font-semibold">Systolic</p>
                       <p className="text-lg font-bold text-gray-900 mt-1">{measurement.systolic}</p>
                       <p className="text-xs text-gray-500">mmHg</p>
                     </div>
-                    <div className="bg-gray-50 rounded-lg p-3 text-center">
+                    <div className="bg-gray-50 rounded-lg p-3 text-center border border-gray-300">
                       <p className="text-xs text-gray-600 font-semibold">Diastolic</p>
                       <p className="text-lg font-bold text-gray-900 mt-1">{measurement.diastolic}</p>
                       <p className="text-xs text-gray-500">mmHg</p>
                     </div>
-                    <div className="bg-gray-50 rounded-lg p-3 text-center">
+                    <div className="bg-gray-50 rounded-lg p-3 text-center border border-gray-300">
                       <p className="text-xs text-gray-600 font-semibold">Respiratory Rate</p>
                       <p className="text-lg font-bold text-gray-900 mt-1">{measurement.respiratory_rate || '-'}</p>
                       <p className="text-xs text-gray-500">/min</p>
                     </div>
-                    <div className="bg-gray-50 rounded-lg p-3 text-center">
+                    <div className="bg-gray-50 p-3 text-center rounded-lg border border-gray-300">
                       <p className="text-xs text-gray-600 font-semibold">Temperature</p>
                       <p className="text-lg font-bold text-gray-900 mt-1">{measurement.temperature || '-'}</p>
                       <p className="text-xs text-gray-500">°C</p>
@@ -337,7 +339,7 @@ export function MeasurementsPage() {
                   </div>
 
                   {measurement.prediction && (
-                    <div className="mt-4 p-3 bg-gray-50 rounded-lg">
+                    <div className="mt-4 p-3 bg-gray-50 rounded-lg border border-gray-300 mb-4">
                       <p className="text-sm font-semibold text-gray-900">Risk Assessment</p>
                       <p className="text-2xl font-bold text-gray-900 mt-1">
                         {(measurement.prediction.risk_score * 100).toFixed(1)}%
@@ -345,9 +347,17 @@ export function MeasurementsPage() {
                     </div>
                   )}
 
+                  {measurement.prediction.reason && (
+                    <div className="p-3 bg-blue-50 rounded-lg border border-blue-200">
+                      <p className="text-sm font-semibold text-gray-900">Reason</p>
+                      <p className="text-sm text-gray-800">{measurement.prediction.reason}</p>
+                    </div>
+                  )}
+
                   {measurement.notes && (
                     <div className="mt-3 p-3 bg-blue-50 rounded-lg border border-blue-200">
-                      <p className="text-sm text-gray-700">{measurement.notes}</p>
+                      <p className="text-sm font-semibold text-gray-900">Notes</p>
+                      <p className="text-sm text-gray-800">{measurement.notes}</p>
                     </div>
                   )}
                 </div>

@@ -1,0 +1,41 @@
+# Backend .dockerignore - keep image small and exclude local/dev files
+# Node modules, env files, git, caches, editor temporary files, and build artifacts
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+
+# Environment
+.env
+.env.*
+backend.env
+mysql.env
+venv/
+env/
+pip-wheel-metadata/
+
+# Docker
+Dockerfile
+
+# Git
+.git
+.gitignore
+
+# IDEs
+.vscode/
+.idea/
+
+# Tests and other local artifacts
+*.sqlite3
+coverage/
+htmlcov/
+
+# Local media / data
+data/

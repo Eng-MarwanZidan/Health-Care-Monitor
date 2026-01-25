@@ -28,6 +28,7 @@ class Prediction(models.Model):
     measurement = models.OneToOneField(Measurement, on_delete=models.CASCADE, related_name='prediction')
     risk_score = models.FloatField()
     risk_label = models.CharField(max_length=50)
+    reason = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

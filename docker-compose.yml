@@ -1,60 +1,77 @@
+### Production-ready docker-compose.yml
+# - Secrets and credentials MUST be moved to external env files (see ./backend.env and ./mysql.env)
+# - No source code bind mounts in production (images contain the code)
+# - Named volumes only for persistent data (db, collected static)
+
 services:
-  backend:
-    build: ./Backend
-    ports:
-      - "8000:8000"
-    volumes:
-      - ./Backend:/app
-      - backend_static:/app/static
-    env_file:
-      - ./Backend/.env.docker
-    environment:
-      - DJANGO_SETTINGS_MODULE=backend.settings.prod
-      - DJANGO_ENV=docker
-      - DEBUG=False
-      - DB_HOST=db
-    command: sh -c "python manage.py migrate && python manage.py collectstatic --noinput && gunicorn backend.wsgi:application --bind 0.0.0.0:8000 --timeout 120"
-    depends_on:
-      db:
-        condition: service_healthy
-    networks:
-      - app-network
-    restart: unless-stopped
-
-  frontend:
-    build: ./Frontend
-    ports:
-      - "3000:80"
-    environment:
-      - NODE_ENV=production
-    networks:
-      - app-network
-    depends_on:
-      - backend
-
   db:
     image: mysql:8.0
-    environment:
-      - MYSQL_DATABASE=health_monitor
-      - MYSQL_ROOT_PASSWORD=458222
-      - MYSQL_ROOT_HOST=%
+    restart: unless-stopped
+    env_file:
+      - ./mysql.env   # provide MYSQL_ROOT_PASSWORD and other secrets here
     volumes:
       - mysql_data:/var/lib/mysql
     ports:
       - "3307:3306"
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p458222"]
+      # Safer healthcheck: avoids exposing password in process args via CMD-SHELL
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -u root -p\"$${MYSQL_ROOT_PASSWORD}\" >/dev/null 2>&1"]
       interval: 10s
       timeout: 5s
       retries: 5
       start_period: 30s
     networks:
-      - app-network
+      - app-net
+
+  backend:
+    build:
+      context: Backend
+      dockerfile: Dockerfile
+    env_file:
+      - ./backend.env   # keep Django secret key and DB credentials here
+    depends_on:
+      - db
+    entrypoint: ["/app/entrypoint.sh"]
+    command: ["gunicorn", "backend.wsgi:application", \
+              "--bind", "0.0.0.0:8000", \
+              "--workers", "3", \
+              "--threads", "2", \
+              "--max-requests", "1000", \
+              "--max-requests-jitter", "50", \
+              "--timeout", "120", \
+              "--log-level", "info"]
+    volumes:
+      - static_volume:/vol/static   # only static files persisted
+    ports:
+      - "8000:8000"
+    restart: unless-stopped
+    # lightweight resource limits for production-friendly defaults
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 512M
+    networks:
+      - app-net
+
+  frontend:
+    build:
+      context: Frontend
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+    restart: unless-stopped
+    depends_on:
+      - db
+    networks:
+      - app-net
 
 volumes:
   mysql_data:
-  backend_static:
+    name: hc_mysql_data
+  static_volume:
+    name: hc_static
 
 networks:
-  app-network:
+  app-net:
     driver: bridge

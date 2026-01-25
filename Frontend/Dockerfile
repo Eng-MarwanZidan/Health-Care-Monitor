@@ -1,31 +1,35 @@
-# Build stage
-FROM node:18-alpine as build
+### Frontend Dockerfile (multi-stage)
+# Goals: build with Node (cache package files early), use `npm ci` with lockfile,
+# produce a small nginx-based runtime image to serve static assets.
+
+# --- Build stage ---
+FROM node:18-alpine AS build
 
 WORKDIR /app
 
-# Copy package files
+# Copy package files first for better layer caching
 COPY package*.json ./
+COPY package-lock.json ./
 
-# Install dependencies
-RUN npm install
+# Prefer npm ci for reproducible installs when lockfile exists
+RUN if [ -f package-lock.json ]; then npm ci --silent --unsafe-perm; else npm install --silent --unsafe-perm; fi
 
-# Copy source code
+# Copy app source and build
 COPY . .
-
-# Build the application
 RUN npm run build
 
-# Production stage
-FROM nginx:alpine
 
-# Copy built files to nginx
+# --- Production stage ---
+FROM nginx:alpine AS runtime
+
+# Clean default files and copy built assets
+RUN rm -rf /usr/share/nginx/html/*
 COPY --from=build /app/dist /usr/share/nginx/html
 
-# Copy nginx config
+# Replace default nginx config if project provides one
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-# Expose port
 EXPOSE 80
 
-# Start nginx
+# Run nginx in foreground
 CMD ["nginx", "-g", "daemon off;"]
