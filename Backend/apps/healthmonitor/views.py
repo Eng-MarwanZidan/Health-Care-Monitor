@@ -17,6 +17,7 @@ class PatientListCreateView(generics.ListCreateAPIView):
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
+        logger.info("Patient is created successfully.")
 
 class PatientDetailView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = PatientSerializer
@@ -59,6 +60,7 @@ class MeasurementListCreateView(generics.ListCreateAPIView):
                 score = float(result['risk_score'])
                 label = result['risk_label']
                 reason = result['reason']
+                logger.info("Measurement is saved and prediction is generated successfully.")
 
             Prediction.objects.create(
                 measurement=measurement,

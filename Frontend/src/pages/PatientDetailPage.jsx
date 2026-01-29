@@ -21,6 +21,7 @@ export function PatientDetailPage() {
     diastolic: '',
     respiratory_rate: '',
     temperature: '',
+    notes: ''
   });
 
   useEffect(() => {
@@ -60,6 +61,7 @@ export function PatientDetailPage() {
         diastolic: parseFloat(formData.diastolic),
         respiratory_rate: parseFloat(formData.respiratory_rate),
         temperature: parseFloat(formData.temperature),
+        notes: formData.notes
       });
       setMeasurements([data, ...measurements]);
       setFormData({
@@ -69,6 +71,7 @@ export function PatientDetailPage() {
         diastolic: '',
         respiratory_rate: '',
         temperature: '',
+        notes: ''
       });
       setShowForm(false);
     } catch (err) {
@@ -108,14 +111,15 @@ export function PatientDetailPage() {
 
       <div className="mb-6 flex justify-between items-start">
         <div>
-          <button
+          <Button             
+            variant="primary"
+            className='mb-3'
             onClick={() => navigate('/patients')}
-            className="text-medical-600 hover:text-medical-700 font-semibold mb-2 flex items-center gap-2"
           >
-            ← Back to Patients
-          </button>
+            {'Back to patients'}
+          </Button>
           <h2 className="text-3xl font-bold text-gray-900">{patient.full_name}</h2>
-          <p className="text-gray-600">DOB: {patient.dob || 'Not set'} | ID: {patient.id}</p>
+          <p className="text-gray-600 text-md">DOB: {patient.dob || 'Not set'} | ID: {patient.id}</p>
         </div>
         <Button
           variant="danger"
@@ -156,14 +160,13 @@ export function PatientDetailPage() {
             <div className="bg-white rounded-lg p-4">
               <div className="flex justify-between items-center">
                 <div>
-                  <p className="text-gray-600 font-semibold">Risk Assessment</p>
-                  <p className="text-2xl font-bold mt-2">{(latestMeasurement.prediction.risk_score * 100).toFixed(1)}%</p>
+                  <p className="font-bold">🔹Risk Assessment</p>
+                  <p className="text-2xl font-semibold mt-2">{(latestMeasurement.prediction.risk_score * 100).toFixed(1)}%</p>
                 </div>
                 <div>
                   <Badge variant={latestMeasurement.prediction.risk_label}>
                     {latestMeasurement.prediction.risk_label?.toUpperCase()}
                   </Badge>
-                  <p className="text-sm text-gray-600 mt-2">{latestMeasurement.prediction.reason}</p>
                 </div>
               </div>
             </div>

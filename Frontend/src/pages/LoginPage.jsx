@@ -24,7 +24,7 @@ export function LoginPage() {
       
       navigate('/dashboard');
     } catch (err) {
-      setError(err.response?.data?.detail || 'Invalid credentials');
+      setError(err.response?.data?.detail || 'Invalid credentials, Please try again');
     } finally {
       setLoading(false);
     }

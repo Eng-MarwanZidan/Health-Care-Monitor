@@ -123,9 +123,10 @@ export function PatientsPage() {
               <div className="flex justify-between items-start">
                 <div className="flex-1">
                   <h4 className="text-xl font-bold text-gray-900">{patient.full_name}</h4>
-                  <div className="mt-2 grid grid-cols-2 gap-4 text-sm text-gray-600">
+                  <div className="mt-2 grid grid-cols-2 gap-4 text-sm text-gray-800">
                     <div>
-                      <span className="font-semibold">DOB:</span> {patient.dob || 'Not set'}
+                      <p className="font-semibold">ID : {patient.id}</p> 
+                      <span className="font-semibold">Date of birth :</span> {patient.dob || 'Not set'}
                     </div>
                     <div>
                       <span className="font-semibold">Added:</span> {new Date(patient.created_at).toLocaleDateString()}
