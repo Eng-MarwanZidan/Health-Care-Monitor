@@ -28,10 +28,6 @@ A full-stack web application for monitoring patient health metrics with AI-power
 - **HTTP Client**: Axios
 - **Styling**: Tailwind CSS
 
-### Infrastructure
-- **Containerization**: Docker & Docker Compose
-- **Orchestration**: Docker Compose for multi-container deployment
-
 ## Project Structure
 
 ```
@@ -55,26 +51,8 @@ Frontend/
 ## Quick Start
 
 ### Prerequisites
-- Docker & Docker Compose
 - Python 3.9+ (for local development)
 - Node.js 16+ (for frontend development)
-
-### Setup with Docker (Recommended)
-
-1. **Clone/Navigate to project directory**
-   ```bash
-   cd "Health Care Project"
-   ```
-
-2. **Build and start containers**
-   ```bash
-   docker-compose up --build
-   ```
-
-3. **Access the application**
-   - Frontend: `http://localhost:3000`
-   - Backend API: `http://localhost:8000`
-   - Admin Panel: `http://localhost:8000/admin`
 
 ### Local Development Setup
 
