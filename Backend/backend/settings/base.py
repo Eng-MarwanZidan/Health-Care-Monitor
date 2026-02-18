@@ -118,8 +118,8 @@ USE_I18N = True
 USE_TZ = True
 
 # Static and media files settings: https://docs.djangoproject.com/en/3.2/howto/static-files/
-STATIC_URL = '/static/'
-MEDIA_URL = '/media/'
+STATIC_URL = 'static/'
+MEDIA_URL = 'media/'
 STATIC_ROOT = BASE_DIR / 'static'
 MEDIA_ROOT = BASE_DIR / 'media'
 
