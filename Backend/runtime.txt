@@ -1,0 +1,5 @@
+#!/bin/bash
+# runtime.txt
+# Specifies Python version for Render deployment
+# This file is required by Render to set the correct Python runtime
+python-3.13.7

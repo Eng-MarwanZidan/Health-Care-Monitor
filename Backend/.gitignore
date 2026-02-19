@@ -29,8 +29,8 @@ env/
 ENV/
 env.bak/
 venv.bak/
-backend.env
-mysql.env
+*.venv/
+.env.production
 
 # Django
 *.log

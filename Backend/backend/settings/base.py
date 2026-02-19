@@ -2,13 +2,13 @@ import os
 from pathlib import Path
 from datetime import timedelta # for JWT token lifetime settings
 from dotenv import load_dotenv
+from decouple import config
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent #define base directory
 
 env_path = Path(__file__).resolve().parent.parent.parent / '.env' # Load .env file path from the project root
 
-if os.getenv("DJANGO_ENV") != "docker":
-    load_dotenv(dotenv_path=env_path)
+load_dotenv(dotenv_path=env_path)
 
 SECRET_KEY = os.getenv('SECRET_KEY', 'replace-me') # gotenv(value in .env file, default value if not found)
 DEBUG = os.getenv('DEBUG', 'True') == 'True' 
@@ -72,18 +72,21 @@ TEMPLATES = [
 WSGI_APPLICATION = 'backend.wsgi.application'
 ASGI_APPLICATION = 'backend.asgi.application'
 
-# Database configuration: using mysql for simplicity
-# Note: Can be overridden in prod.py for production-specific options
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': os.getenv('DB_NAME') or 'health_monitor',
-        'USER': os.getenv('DB_USER') or 'root',
-        'PASSWORD': os.getenv('DB_PASSWORD'),
-        'HOST': os.getenv('DB_HOST'),
-        'PORT': os.getenv('DB_PORT', '3306'),
+        'ENGINE': os.getenv('DATABASE_ENGINE', 'django.db.backends.postgresql'),
+        'NAME': os.getenv('DATABASE_NAME', 'postgres') ,
+        'USER': os.getenv('DATABASE_USER', 'postgres'),
+        'PASSWORD': os.getenv('DATABASE_PASSWORD'),
+        'HOST': os.getenv('DATABASE_HOST'),
+        'PORT': os.getenv('DATABASE_PORT'),
+        'OPTIONS': {
+            'sslmode': 'require',
+        },
     }
 }
+
 
 # Custom user model definition 
 AUTH_USER_MODEL = 'users.User'
@@ -117,11 +120,11 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
 
-# Static and media files settings: https://docs.djangoproject.com/en/3.2/howto/static-files/
-STATIC_URL = 'static/'
-MEDIA_URL = 'media/'
-STATIC_ROOT = BASE_DIR / 'static'
-MEDIA_ROOT = BASE_DIR / 'media'
+# Static files settings
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Default primary key field type: https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
