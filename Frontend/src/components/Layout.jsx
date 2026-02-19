@@ -67,9 +67,9 @@ export function Layout({ children }) {
           <div className="flex justify-between items-center h-16">
             {/* Logo */}
             <div className="flex items-center">
-              <img src="/heart-pulse.svg" alt="Health Monitor Logo" className="w-12 h-12 mr-3" />
+              <img src="/heart-pulse.svg" alt="Health Care Monitor Logo" className="w-12 h-12 mr-3" />
               <div>
-                <h1 className="text-3xl font-bold text-medical-600">Health Monitor</h1>
+                <h1 className="text-3xl font-bold text-medical-600">Health Care Monitor</h1>
                 <p className="text-2xs text-balck-700">Medical Dashboard</p>
               </div>
             </div>
@@ -177,10 +177,10 @@ export function Layout({ children }) {
         <div className="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="flex items-center mb-4 md:mb-0">
-              <span className="text-2sm text-gray-900">Health Monitor - Medical Dashboard</span>
+              <span className="text-2sm text-gray-900">Health Care Monitor - Medical Dashboard</span>
             </div>
             <div className="flex space-x-6 text-sm text-gray-900">
-              <span>© 2026 Health Monitor</span>
+              <span>© 2026 Health Care Monitor</span>
               <span>•</span>
               <span>Version 1.0.0</span>
               <span>•</span>

@@ -70,8 +70,8 @@ export function RegisterPage() {
     <div className="min-h-screen bg-gradient-to-br from-medical-600 to-medical-900 flex items-center justify-center p-4">
       <Card className="w-full max-w-md">
         <div className="text-center mb-8">
-          <img src="/heart-pulse.svg" alt="Health Monitor Logo" className="w-16 h-16 mx-auto mb-4" />
-          <h1 className="text-3xl font-bold text-gray-900">Health Monitor</h1>
+          <img src="/heart-pulse.svg" alt="Health Care Monitor Logo" className="w-16 h-16 mx-auto mb-4" />
+          <h1 className="text-3xl font-bold text-gray-900">Health Care Monitor</h1>
           <p className="text-gray-600 mt-2">Create Your Account</p>
         </div>
 
