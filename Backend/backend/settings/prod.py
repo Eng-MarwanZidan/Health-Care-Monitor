@@ -6,8 +6,7 @@ DEBUG = False
 ENVIRON = os.getenv('RENDER', False)
 
 ADMINS = ["marwanmohamed@feng.bu.edu.eg"]
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
-ALLOWED_HOSTS = [host.strip() for host in ALLOWED_HOSTS]
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', ['*']).split(',')
 
 # Security settings for production
 SECURE_SSL_REDIRECT = os.getenv('SECURE_SSL_REDIRECT', 'True') == 'True'

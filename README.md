@@ -127,8 +127,6 @@ VITE_API_URL=https://health-monitor-backend.onrender.com/api
 | `Backend/backend/settings/base.py` | PostgreSQL configuration |
 | `Backend/backend/settings/prod.py` | Production hardening |
 | `Backend/apps/healthmonitor/views_health.py` | Health check endpoints |
-| `render.yaml` | Full-stack Render deployment |
-| `vercel.json` | Vercel frontend config |
 | `.env.production` | Production environment template |
 | `docker-compose.yml` | Local development stack |
 
@@ -147,16 +145,6 @@ curl https://health-monitor-backend.onrender.com/api/version/
 # Frontend
 Visit https://health-monitor-frontend.vercel.app
 ```
-
----
-
-## 💰 Cost Estimation
-
-- **Render**: ~$7-25/month (or free tier with limitations)
-- **Vercel**: Free-$20/month (free for static)
-- **Supabase**: $25/month (Pro tier) or free tier
-- **Total**: ~$32-70/month
-
 ---
 
 ## 🔧 Troubleshooting
