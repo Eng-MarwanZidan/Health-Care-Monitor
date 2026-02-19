@@ -67,7 +67,7 @@ export function Layout({ children }) {
           <div className="flex justify-between items-center h-16">
             {/* Logo */}
             <div className="flex items-center">
-              <img src="/heart-pulse.png" alt="Health Monitor Logo" className="w-12 h-12 mr-3" />
+              <img src="/heart-pulse.svg" alt="Health Monitor Logo" className="w-12 h-12 mr-3" />
               <div>
                 <h1 className="text-3xl font-bold text-medical-600">Health Monitor</h1>
                 <p className="text-2xs text-balck-700">Medical Dashboard</p>
