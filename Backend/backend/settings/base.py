@@ -6,7 +6,7 @@ from decouple import config
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent #define base directory
 
-env_path = Path(__file__).resolve().parent.parent.parent / '.env' # Load .env file path from the project root
+env_path = BASE_DIR / '.env' # Load .env file path from the project root
 
 load_dotenv(dotenv_path=env_path)
 
